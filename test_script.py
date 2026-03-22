@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 # === CONFIG ===
 model_cache = "/scratch/pioneer/jobs/rxs1540/hf_cache/models--meta-llama--Meta-Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659"
 excel_file = "/home/akk97/Quotations.xlsx"
-column_name = "quotations_cleaned"  # change if different in your Excel
+column_name = "quotations_cleaned"   
 
 # === LOAD MODEL & TOKENIZER ===
 print("Loading model and tokenizer...")
@@ -22,7 +22,7 @@ age_predictor = pipeline(
     "text-generation",
     model=model,
     tokenizer=tokenizer,
-    device=0,          # set to -1 if using CPU
+    device=0,           
     trust_remote_code=True,
 )
 
@@ -37,7 +37,6 @@ def predict_age_batch(texts, max_new_tokens=16):
     """Return predicted ages for a batch of texts"""
     prompts = [f"Guess the age of the person speaking: {q}" for q in texts]
     outputs = age_predictor(prompts, max_new_tokens=max_new_tokens, batch_size=len(prompts))
-    # Extract first line of output
     ages = [o[0]["generated_text"].split(":")[-1].strip() for o in outputs]
     return ages
 
